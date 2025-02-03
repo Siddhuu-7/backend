@@ -43,6 +43,7 @@ route.post('/login-google', async (req, res) => {
       message: "Login successful.",
       token: userToken,
       _id:user._id,
+      userName:user.userName
     });
   } catch (error) {
     console.error("Error during Google login:", error.message);
@@ -52,7 +53,6 @@ route.post('/login-google', async (req, res) => {
 
 route.post('/login-details',async(req,res)=>{
     const{MobileNumber,password}=req.body;
-    console.log(req.body)
     try {
         let user = await UserModel.findOne({ MobileNumber });
         const ismatch= await bcrypt.compare(password,user.password)
@@ -63,7 +63,8 @@ route.post('/login-details',async(req,res)=>{
         const userToken = jwt.sign({ id: user._id, email: user.email }, process.env.SECRET_KEY, {
             expiresIn: '1h', 
           });
- return res.status(202).json({msg:'Login Succes',token:userToken,_id:user._id})
+ return res.status(202).json({msg:'Login Succes',token:userToken,_id:user._id,userName:user.userName
+ })
     } catch (error) {
         console.error("Error during  login:", error.message);
     return res.status(500).json({ error: "Internal server error." });

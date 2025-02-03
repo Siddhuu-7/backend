@@ -7,7 +7,6 @@ route.post('/request', async (req, res) => {
     const { requester, recipient, status } = req.body;
 
     try {
-        // Validate input
         if (!requester || !recipient || !status) {
             return res.status(400).json({ msg: "requester, recipient, and status are required" });
         }
@@ -47,12 +46,10 @@ route.post('/request', async (req, res) => {
 
 route.get('/get-all-requests/:id', async (req, res) => {
     const recipient = req.params.id;  
-
     try {
         const requestData = await Request.find({ recipient: recipient });
 
         const pendingRequests = requestData.filter(request => request.status === 'pending');
-
         if (pendingRequests.length > 0) {
             const usersData = await Promise.all(pendingRequests.map(async (request) => {
                 const requesterObjectId = new mongoose.Types.ObjectId(request.requester);
@@ -79,21 +76,43 @@ route.get('/get-all-requests/:id', async (req, res) => {
 });
 
 
-route.post('/get-accepted-request',async(req,res)=>{
-    const {recipient,requester}=req.body
-    
+route.get('/get-accepted-request/:id', async (req, res) => {
+    const id = req.params.id;
+
+
     try {
-        const accepteddata=await Request.find({recipient,requester,status:"accepted"})
-    
-    if(!res.length<0){
-       return res.json({msg:"No  accepted requests founded "})
-    }
-    res.json(accepteddata)
+        const accepteddata = await Request.find({ 
+            $or: [
+                { recipient: id, status: "accepted" },
+                { requester: id, status: "accepted" }
+            ]
+        });
+
+        console.log(accepteddata);
+
+        if (accepteddata.length === 0) {
+            return res.json([]);
+        }
+
+        
+        const userIds = accepteddata.map(data => 
+            data.requester === id ? data.recipient : data.requester
+        );
+
+        const userData = await UserModel.find({ _id: { $in: userIds } }, { userName: 1 });
+
+        res.json(userData);
     } catch (error) {
-        res.json({msg:error.message})
+        res.status(500).json({ msg: error.message });
     }
-    
-})
+});
+
+
+
+
+
+
+
 module.exports = route;
 
  
