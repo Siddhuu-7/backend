@@ -27,7 +27,6 @@ router.post('/goals/post', async (req, res) => {
                 assignedTo,
                 assignedGoal: [newGoal]  
             });
-
             await newGoalEntry.save();
             res.status(201).json({ message: "Goal assigned successfully!", goal: newGoalEntry });
         }

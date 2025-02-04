@@ -4,6 +4,7 @@ const { userModel: UserModel } = require('../model/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt=require('bcrypt')
 const mongoose=require('mongoose')
+const Request=require('../model/request.model')
 const decode = (token) => {
   try {
     const data = jwt.decode(token);
@@ -147,16 +148,22 @@ route.post('/profileDataUpdate', async (req, res) => {
 
 
 
-route.get('/get-all-data', async (req, res) => {
-  try {
-    
-    const data = await UserModel.find({},{userName:1,skills:1,summary:1});
-    
-    
-    
-    res.status(202).json( data );
+route.get('/get-all-data/:id', async (req, res) => {
+  const id = req.params.id;
+  
+  try { 
+    const acceptedRequests = await Request.find({
+      $or: [{ requester: id }, { recipient: id }],
+      status: "accepted"
+    });
+    const connectedUserIds = acceptedRequests.flatMap(req => [req.requester.toString(), req.recipient.toString()]);
+    const data = await UserModel.find({}, { userName: 1, skills: 1, summary: 1 });
+    const updatedData = data.map(user => ({
+      ...user.toObject(),
+      status: connectedUserIds.includes(user._id.toString()) ? "connected" : "not connected"
+    }));
+    res.status(202).json(updatedData);
   } catch (error) {
-    
     console.error(error.message);
     res.status(505).json({ msg: error.message });
   }
