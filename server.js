@@ -6,7 +6,7 @@ const searchEngine = require('./routes/search.route');
 const SeekAndSeeking = require('./routes/SeekAndSeekers.route');
 const Goals = require('./routes/Goals.route');
 const Message = require('./routes/Message.route');
-const socketHandler = require('./sockets.route'); 
+const socketHandler = require('./routes/socket.route'); 
 
 require('dotenv').config();
 
