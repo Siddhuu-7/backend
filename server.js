@@ -8,8 +8,9 @@ const bcrypt=require('bcrypt')
 const searchEngine=require('./routes/search.route')
 const SeekAndSeking=require('./routes/SeekAndSeekers.route')
 const Goals=require('./routes/Goals.route')
-app.use(express.json())
-const PORT=process.env.PORT
+const createpost=require('./routes/createpost.route')
+app.use(express.json({ limit: '10mb' })); // Adjust this size as needed
+app.use(express.urlencoded({ limit: '10mb', extended: true }));const PORT=process.env.PORT
 app.use(cors({
     origin:"*"
 }))
@@ -18,6 +19,7 @@ app.use('',userResquest)
 app.use('/',Goals)
 app.use('',searchEngine)
 app.use('',SeekAndSeking)
+app.use('',createpost)
 app.listen(PORT,()=>{
     console.log(`http://localhost:${PORT}`);
 })
