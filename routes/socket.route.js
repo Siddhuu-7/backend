@@ -2,12 +2,13 @@ const { Server } = require('socket.io');
 const Message = require('../model/messages.model'); 
 
 const socketHandler = (server) => {
-  const io = new Server(server, {
-    cors: {
-      origin: "*", 
-      methods: ["GET", "POST"],
-    },
-  });
+    const io = new Server(server, {
+        cors: {
+          origin: ["http://localhost:3000", "https://backend-diwr.onrender.com"], // Allow both
+          methods: ["GET", "POST"],
+        },
+      });
+      
 
   io.on("connection", (socket) => {
     console.log("User connected", socket.id);
