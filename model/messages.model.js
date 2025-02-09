@@ -1,5 +1,5 @@
 const moongoose=require('mongoose');
-const MessageSchema = new mongoose.Schema({
+const MessageSchema = new moongoose.Schema({
     senderId: String,
     receiverId: String,
     message: String,

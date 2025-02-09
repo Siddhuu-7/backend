@@ -1,10 +1,10 @@
 const { Server } = require('socket.io');
-const Message = require('./models/Message'); // Adjust the path as needed
+const Message = require('./models/Message'); 
 
 const socketHandler = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "https://backend-diwr.onrender.com", // Replace with your frontend URL
+      origin: "https://backend-diwr.onrender.com", 
       methods: ["GET", "POST"],
     },
   });
