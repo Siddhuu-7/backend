@@ -4,7 +4,7 @@ const Message = require('../model/messages.model');
 const socketHandler = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "https://backend-diwr.onrender.com", 
+      origin: "*", 
       methods: ["GET", "POST"],
     },
   });

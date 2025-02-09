@@ -20,8 +20,11 @@ app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: "*",
-}));
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Ensure all necessary methods are allowed
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
+  }));
+  
 
 app.use('/user', userRoutes);
 app.use('', userRequest);
